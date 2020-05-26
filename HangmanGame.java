@@ -167,4 +167,5 @@ public class HangmanGame {
 			System.out.print("Guess: ");
 		}
 	}
+
 }

@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Hangman {
+
 	public static void main(String[] args) {
 		try {
 			HangmanGui frame = new HangmanGui();
@@ -34,4 +35,5 @@ public class Hangman {
 		System.out.println("Bye"); // Prints bye
 		scan.close(); // Closes input
 	}
+
 }
