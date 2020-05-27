@@ -53,16 +53,31 @@ public class HangmanGui extends JFrame {
 		panel.add(onePlayerButton);
 		panel.add(twoPlayerButton);
 		//panel.add(rdbtnNewRadioButton);
-		String [] topRow = {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p"};
+
+		//top row
+		String[] topRow = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p" };
 		JButton[] topRowButtons = new JButton[topRow.length];
-		for (int i=0; i < topRow.length; i++) {
-			topRowButtons[i]= new JButton(topRow[i]);
+		for (int i = 0; i < topRow.length; i++) {
+			topRowButtons[i] = new JButton(topRow[i]);
 			topRowButtons[i].setHorizontalAlignment(SwingConstants.LEFT);
 			topRowButtons[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 				}
 			});
 			panel.add(topRowButtons[i]);
+		}
+
+		//middle row
+		String[] middleRow = { "a", "s", "d", "f", "g", "h", "j", "k" };
+		JButton[] middleRowButtons = new JButton[middleRow.length];
+		for (int i = 0; i < middleRow.length; i++) {
+			middleRowButtons[i] = new JButton(middleRow[i]);
+			middleRowButtons[i].setHorizontalAlignment(SwingConstants.LEFT);
+			middleRowButtons[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
+			panel.add(middleRowButtons[i]);
 		}
 		
 		
