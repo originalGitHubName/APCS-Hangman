@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Font;
+import javax.swing.JLabel;
 
 
 public class HangmanGui extends JFrame {
@@ -48,36 +49,38 @@ public class HangmanGui extends JFrame {
 		panel.add(wordInProgress);
 		wordInProgress.setColumns(15);
 		
+		JButton btnNewButton_1 = new JButton("Exit");
+		panel.add(btnNewButton_1);
+		
+		JLabel lblNewLabel = new JLabel("Lives left: #");
+		panel.add(lblNewLabel);
+		
 		JButton giveUpButton = new JButton("I give up");
 		panel.add(giveUpButton);
+		
+		JLabel label = new JLabel("");
+		panel.add(label);
 		panel.add(onePlayerButton);
 		panel.add(twoPlayerButton);
 		//panel.add(rdbtnNewRadioButton);
-
-		//top row
-		String[] topRow = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p" };
-		JButton[] topRowButtons = new JButton[topRow.length];
-		for (int i = 0; i < topRow.length; i++) {
-			topRowButtons[i] = new JButton(topRow[i]);
-			topRowButtons[i].setHorizontalAlignment(SwingConstants.LEFT);
-			topRowButtons[i].addActionListener(new ActionListener() {
+		String [] keys = {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p","-", "a","s","d","f","g","h",
+				"j","k","l","-", "z","x","c","v","b","n","m"};
+		System.out.println("keys length "+keys.length);
+		JButton[] keyButtons = new JButton[keys.length-2];
+		int nextButtonIndex = 0;
+		for (int i=0; i < keys.length; i++) {
+			if (keys[i].equals("-")){
+				//special case, advance, no button
+				continue;
+			}
+			System.out.println("adding "+ keys[i]);
+			keyButtons[nextButtonIndex]= new JButton(keys[i]);
+			keyButtons[nextButtonIndex].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 				}
 			});
-			panel.add(topRowButtons[i]);
-		}
-
-		//middle row
-		String[] middleRow = { "a", "s", "d", "f", "g", "h", "j", "k" };
-		JButton[] middleRowButtons = new JButton[middleRow.length];
-		for (int i = 0; i < middleRow.length; i++) {
-			middleRowButtons[i] = new JButton(middleRow[i]);
-			middleRowButtons[i].setHorizontalAlignment(SwingConstants.LEFT);
-			middleRowButtons[i].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
-			panel.add(middleRowButtons[i]);
+			panel.add(keyButtons[nextButtonIndex]);
+			nextButtonIndex++;
 		}
 		
 		
