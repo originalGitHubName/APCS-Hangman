@@ -4,7 +4,7 @@ public class Hangman {
 
 	public static void main(String[] args) {
 		try {
-			HangmanGui frame = new HangmanGui();
+			HangmanGui frame = new HangmanGui(5,"__________");
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
