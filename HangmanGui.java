@@ -65,6 +65,19 @@ public class HangmanGui extends JFrame {
 		}
 	}
 
+	private void unlockKeys() {
+		// idea, maybe never unlock the label at the end of the second row?
+		for (int i = 0; i < keyButtons.length; i++) {
+			keyButtons[i].setEnabled(true);
+		}
+	}
+	
+	private void lockKeys() {
+		for (int i = 0; i < keyButtons.length; i++) {
+			keyButtons[i].setEnabled(false);
+		}
+	}
+	
 	private void initDisplay(int totalLives, String newSecretWord) {
 		// reset for new game, possibly the first game, clear out any prior info or
 		// settings
@@ -75,9 +88,7 @@ public class HangmanGui extends JFrame {
 			blanks[i] = '_';
 		}
 		updateWordInProgress(blanks);
-		for (int i = 0; i < keyButtons.length; i++) {
-			keyButtons[i].setEnabled(true);
-		}
+		unlockKeys();
 	}
 
 	public void initGameGui(int totalLives, String newSecretWord) {
@@ -130,9 +141,8 @@ public class HangmanGui extends JFrame {
 		newGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("New Game button was pressed");// TODO: remove once done debugging
-				for (int i = 0; i < keyButtons.length; i++) {
-					keyButtons[i].setEnabled(true);
-				} //TODO Dr. K, check if needed or handled by initDisplay
+				// no need to unlockKeys, handled in call to initDisplay via initGameGui
+				unlockKeys();// but for now, before "new game" works, it blocks the second game
 				// TODO Moshe, add logic to let Hangman know to start new game, and maybe in the meantime stop any action on current game (disable all keys?)
 			}
 		});
@@ -143,9 +153,7 @@ public class HangmanGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("I give up button was pressed");// TODO: remove once done debugging
 				youLose(getOurCopyOfSecretWord());
-				for (int i = 0; i < keyButtons.length; i++) {
-					keyButtons[i].setEnabled(false);
-				}
+				lockKeys();
 			}
 		});
 		
@@ -164,6 +172,7 @@ public class HangmanGui extends JFrame {
 			boolean fakeButton = (keys.charAt(i) == '-');
 			if (!fakeButton) {
 				keyButtons[nextButtonIndex] = new JButton(keys.substring(i, i + 1));
+				keyButtons[nextButtonIndex].setEnabled(false);// not enabled until all there,tries to avoid lost first keystroke
 				((JButton) keyButtons[nextButtonIndex]).setActionCommand(keys.substring(i, i + 1));
 				((JButton) keyButtons[nextButtonIndex]).addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -176,6 +185,7 @@ public class HangmanGui extends JFrame {
 				});
 			} else {
 				keyButtons[nextButtonIndex] = new JLabel("");
+				keyButtons[nextButtonIndex].setEnabled(false);//initially not enabled, probably fine to leave it that way, but it's a label so no big deal either way
 			}
 			panel.add(keyButtons[nextButtonIndex]);
 			nextButtonIndex++;
