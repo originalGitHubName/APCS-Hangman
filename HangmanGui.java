@@ -142,8 +142,7 @@ public class HangmanGui extends JFrame {
 		giveUpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("I give up button was pressed");// TODO: remove once done debugging
-				// TODO Elie, check Isaac's code, with listener show secret word in popup message box or
-				// in the spot it's in (you will want to use getOurCopyOfSecretWord)
+				youLose(getOurCopyOfSecretWord());
 				for (int i = 0; i < keyButtons.length; i++) {
 					keyButtons[i].setEnabled(false);
 				}
