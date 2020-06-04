@@ -16,11 +16,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridLayout;
 
-
 public class HangmanGui extends JFrame {
-
 
 	/**
 	 * 
@@ -29,124 +29,188 @@ public class HangmanGui extends JFrame {
 	private JTextField wordInProgress;
 	private JLabel gallows;
 	private JLabel livesLeft;
-	
-	
-	
+	private JLabel currentChar;// empty initially, latest keystroke
+	private String ourCopyOfSecretWord = "";
+	private JComponent[] keyButtons;
+	private JRadioButton onePlayerButton = new JRadioButton("1 player", true);
+	private JRadioButton twoPlayerButton = new JRadioButton("2 players", false);
+	private static final String keys = "qwertyuiopasdfghjkl-zxcvbnm";
+
+	public char getNextChar() {
+		char temp = ' ';
+		if (currentChar.getText().length() > 0) {
+			temp = currentChar.getText().charAt(0);
+			int i = keys.indexOf(temp);
+			if (i != -1) {
+				keyButtons[i].setEnabled(false);
+			}
+		}
+		currentChar.setText("");
+		return temp;
+	}
+
+	public void youWin() {
+		JOptionPane.showMessageDialog(this, "You guessed the word!\n" + "Nice win.");
+	}
+
+	public void youLose(String word) {
+		JOptionPane.showMessageDialog(this,
+				"Game over you suck.\nThe correct word was " + word + " how did you not guess that?");
+	}
+
+	public int getNumPlayers() {
+		if (twoPlayerButton.isSelected()) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
+
+	private void initDisplay(int totalLives, String newSecretWord) {
+		// reset for new game, possibly the first game, clear out any prior info or
+		// settings
+		currentChar.setText("");// no letters guessed yet
+		showLivesLeft(totalLives);
+		char[] blanks = new char[newSecretWord.length()];
+		for (int i = 0; i < newSecretWord.length(); i++) {
+			blanks[i] = '_';
+		}
+		updateWordInProgress(blanks);
+		for (int i = 0; i < keyButtons.length; i++) {
+			keyButtons[i].setEnabled(true);
+		}
+	}
+
+	public void initGameGui(int totalLives, String newSecretWord) {
+		// init graphics and all member variables
+		initDisplay(totalLives, newSecretWord);
+		setOurCopyOfSecretWord(newSecretWord);
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public HangmanGui(int numLivesLeft, String blanks) {
+	public HangmanGui(int totalLives, String newSecretWord) {
 		setBounds(100, 100, 1600, 1000);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("AP CS Hangman");
 		getContentPane().setLayout(new GridLayout(1, 1, 0, 0));// 1 by 1 grid says as large as possible
-		
+
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(0, 10));
+		panel.setLayout(new GridLayout(0, 10));//10 columns, as many rows as needed
 		getContentPane().add(panel);
-		
-		
-		
+
 		wordInProgress = new JTextField();
 		wordInProgress.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		updateWordInProgress(blanks);
 		panel.add(wordInProgress);
-		wordInProgress.setColumns(15);
-		
+		wordInProgress.setColumns(15);// length of longest word? May need to be higher, but would want wider box
+
 		gallows = new JLabel("");
 		gallows.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(gallows);
-		
+
 		JLabel livesLeftLabel = new JLabel("Lives left:");
 		livesLeftLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(livesLeftLabel);
-		
-		
-		
+
 		livesLeft = new JLabel("");
 		livesLeft.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(livesLeft);
-		setImage(numLivesLeft);
-		
-		
+
 		ButtonGroup numPlayers = new ButtonGroup();
-		JRadioButton onePlayerButton = new JRadioButton("1 player", true);
-		JRadioButton twoPlayerButton = new JRadioButton("2 players", false);
-		numPlayers.add(onePlayerButton );
+		numPlayers.add(onePlayerButton);
 		numPlayers.add(twoPlayerButton);
-		
-		JLabel label = new JLabel("<html><center>"+"Select"+"<br>"+"number of players"+"</center></html>");
+
+		JLabel label = new JLabel("<html><center>" + "Select" + "<br>" + "number of players" + "</center></html>");
 		panel.add(label);
 		panel.add(onePlayerButton);
 		panel.add(twoPlayerButton);
-		
-		
-		JButton btnNewButton = new JButton("<html><center>"+"Start"+"<br>"+"new game"+"</center></html>");
-		panel.add(btnNewButton);
-		
+
+		JButton newGameButton = new JButton("<html><center>" + "Start" + "<br>" + "new game" + "</center></html>");
+		panel.add(newGameButton);
+		newGameButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("New Game button was pressed");// TODO: remove once done debugging
+				// TODO Moshe, add logic to let Hangman know to start new game, and maybe in the meantime stop any action on current game (disable all keys?)
+			}
+		});
+
 		JButton giveUpButton = new JButton("I give up");
 		panel.add(giveUpButton);
-		
-		
-		JButton exitButton = new JButton("Exit");
-		panel.add(exitButton);
-		
-		
-		
-		String [] keys = {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a","s","d","f","g","h",
-				"j","k","l","-", "z","x","c","v","b","n","m"};
-		JComponent[] keyButtons = new JComponent[keys.length];
-		int nextButtonIndex = 0;
-		for (int i=0; i < keys.length; i++) {
-			boolean fakeButton = (keys[i].equals("-"));
-			if (!fakeButton) {
-			keyButtons[nextButtonIndex]= new JButton(keys[i]);
-			((JButton)keyButtons[nextButtonIndex]).addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
+		giveUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("I give up button was pressed");// TODO: remove once done debugging
+				// TODO Elie, with listener show secret word in popup message box or
+				// in the spot it's in (you will want to use getOurCopyOfSecretWord)
+				// TODO Isaac, put in logic to make sure game (but not session) ends, maybe just disable all keys?
 			}
-			else
-			{
-				keyButtons[nextButtonIndex]= new JLabel("");
+		});
+		
+
+		JButton exitButton = new JButton("Exit");
+		exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		panel.add(exitButton);
+
+		keyButtons = new JComponent[keys.length()];
+		int nextButtonIndex = 0;
+		for (int i = 0; i < keys.length(); i++) {
+			boolean fakeButton = (keys.charAt(i) == '-');
+			if (!fakeButton) {
+				keyButtons[nextButtonIndex] = new JButton(keys.substring(i, i + 1));
+				((JButton) keyButtons[nextButtonIndex]).setActionCommand(keys.substring(i, i + 1));
+				((JButton) keyButtons[nextButtonIndex]).addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String temp = e.getActionCommand().substring(0, 1);
+						String s = currentChar.getText();
+						if (!(s.length() > 0 && Character.isAlphabetic(s.charAt(0)))) {
+							currentChar.setText(temp);
+						}
+					}
+				});
+			} else {
+				keyButtons[nextButtonIndex] = new JLabel("");
 			}
 			panel.add(keyButtons[nextButtonIndex]);
 			nextButtonIndex++;
 		}
-		
-		
-		
-		//calling program should setVisible(true)
+		currentChar = new JLabel("");
+		panel.add(currentChar);
+		initGameGui(totalLives, newSecretWord);
+
+		// calling program should setVisible(true)
 
 	}
-	
-	public void updateWordInProgress(String wordWithUnderscores) {
+
+	public void updateWordInProgress(char[] wordWithUnderscores) {
 		String result = "";
 		boolean first = true;
-		for (int i = 0; i < wordWithUnderscores.length(); i++) {
+		for (int i = 0; i < wordWithUnderscores.length; i++) {
 			if (!first) {
 				result += ' ';
-			}
-			else {
+			} else {
 				first = false;
 			}
-			result += wordWithUnderscores.charAt(i);
+			result += wordWithUnderscores[i];
 		}
 		wordInProgress.setText(result);
 	}
 
-	private void setImage(int numLivesLeft) {
+	public void showLivesLeft(int numLivesLeft) {
 		BufferedImage img = null;
-		// TODO choose image based on num lives left
+		// TODO Elie choose image based on num lives left
 		try {
-			img = ImageIO.read(new URL(
-			        "https://upload.wikimedia.org/wikipedia/commons/8/8b/Hangman-0.png"));
+			img = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/8/8b/Hangman-0.png"));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error: bad URL requested");
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error: could not open URL");
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		ImageIcon icon = null;
@@ -154,9 +218,17 @@ public class HangmanGui extends JFrame {
 			icon = new ImageIcon(img);
 		}
 		if (!(icon == null)) {
-		gallows.setIcon(icon);
+			gallows.setIcon(icon);
 		}
 		livesLeft.setText("" + numLivesLeft);
 	}
-	
+
+	public String getOurCopyOfSecretWord() {
+		return ourCopyOfSecretWord;
+	}
+
+	public void setOurCopyOfSecretWord(String ourCopyOfSecretWord) {
+		this.ourCopyOfSecretWord = ourCopyOfSecretWord;
+	}
+
 }
