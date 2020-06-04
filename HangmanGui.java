@@ -131,6 +131,9 @@ public class HangmanGui extends JFrame {
 		newGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("New Game button was pressed");// TODO: remove once done debugging
+				for (int i = 0; i < keyButtons.length; i++) {
+					keyButtons[i].setEnabled(true);
+				}
 				// TODO Moshe, add logic to let Hangman know to start new game, and maybe in the meantime stop any action on current game (disable all keys?)
 			}
 		});
