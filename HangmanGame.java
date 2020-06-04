@@ -5,7 +5,7 @@ public class HangmanGame {
 	public int wordLength; // Length of word
 	public int lives; // # Of lives
 	private char[] progress; // Char array of current progress
-	public boolean gameOver = false; // boolean of if game is over
+	private boolean gameOver = false; // boolean of if game is over
 
 	public String getWord() {
 		return word;
@@ -80,10 +80,10 @@ public class HangmanGame {
 	public void complete(HangmanGui hangmanGui) {
 		if (lives == 0) {
 			hangmanGui.youLose(word);
-			gameOver = true;
+			setGameOver(true);
 		} else if (checkBlanks() == 0) {
 			hangmanGui.youWin();
-			gameOver = true;
+			setGameOver(true);
 		}
 	}
 
@@ -91,6 +91,14 @@ public class HangmanGame {
 	// Check if letter in word
 	public void isGuessed(char g, HangmanGui hangmanGui) {
 			check(g, hangmanGui);
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 
 

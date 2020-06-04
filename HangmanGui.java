@@ -17,7 +17,6 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.GridLayout;
 
 public class HangmanGui extends JFrame {
@@ -133,7 +132,7 @@ public class HangmanGui extends JFrame {
 				System.out.println("New Game button was pressed");// TODO: remove once done debugging
 				for (int i = 0; i < keyButtons.length; i++) {
 					keyButtons[i].setEnabled(true);
-				}
+				} //TODO Dr. K, check if needed or handled by initDisplay
 				// TODO Moshe, add logic to let Hangman know to start new game, and maybe in the meantime stop any action on current game (disable all keys?)
 			}
 		});
@@ -143,7 +142,7 @@ public class HangmanGui extends JFrame {
 		giveUpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("I give up button was pressed");// TODO: remove once done debugging
-				// TODO Elie, with listener show secret word in popup message box or
+				// TODO Elie, check Isaac's code, with listener show secret word in popup message box or
 				// in the spot it's in (you will want to use getOurCopyOfSecretWord)
 				for (int i = 0; i < keyButtons.length; i++) {
 					keyButtons[i].setEnabled(false);
